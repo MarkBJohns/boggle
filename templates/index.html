@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block title %} Boggle {% endblock %}
+
+{% block content %}
+
+<h1 class="reverse"> Boggle </h1>
+
+<table>
+    {% for row in board %}
+    <tr>
+        {% for letter in row %}
+        <td> {{letter}} </td>
+        {% endfor %}
+    </tr>
+    {% endfor %}
+</table>
+
+<form action="">
+    <label for="guess">Guess:</label>
+    <input type="text" name="guess" id="guess">
+    <button>Submit</button>
+</form>
+
+{% endblock %}
