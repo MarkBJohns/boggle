@@ -22,4 +22,15 @@
     <button>Submit</button>
 </form>
 
+<div id="words">
+    <label for="found">Found words</label>
+    <input type="text" id="found" readonly><br>
+    <label for="not-word">Not a word</label>
+    <input type="text" id="not-word" readonly><br>
+    <label for="not-on-board">Not on board</label>
+    <input type="text" id="not-on-board" readonly>
+</div>
+
+<p id="score">Score: {{score}} </p>
+
 {% endblock %}

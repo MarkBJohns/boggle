@@ -2,3 +2,18 @@
     background-color: black;
     color: white;
 }
+
+#words input{
+    justify-content: center;
+    background-color: lightgray;
+}
+
+#found{
+    color: darkgreen;
+}
+#not-word{
+    color: darkred;
+}
+#not-on-board{
+    color: black;
+}
