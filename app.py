@@ -1,45 +1,42 @@
-from flask import Flask, render_template, request, session, jsonify
-# from flask_debugtoolbar import DebugToolbarExtension
+from flask import Flask, request, render_template, jsonify, session
+from boggle import Boggle
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = "secret"
-# dubug = DebugToolbarExtension(app)
-
-from boggle import Boggle
+app.config["SECRET_KEY"] = "shhhhhh"
 
 boggle_game = Boggle()
 
-@app.before_first_request
-def create_board():
-    if 'board' not in session:
-        session['board'] = boggle_game.make_board()
-    session['score'] = 0
-
 @app.route('/')
-def start_game():
+def home_page():
+    "Show the game board"
+    board = boggle_game.make_board()
+    session['board'] = board
+    highscore = session.get('highscore', 0)
+    nplays = session.get('nplays', 0)
+    
+    return render_template(
+        "index.html", board=board,
+        highscore=highscore,
+        nplays=nplays
+    )
+
+@app.route('/check-guess', methods=['GET', 'POST'])
+def check_word():
+    "Check if word is valid and on the board"
+    word = request.args['word']
     board = session['board']
-    score = session['score']
-    return render_template('index.html', board=board, score=score)
+    response = boggle_game.check_valid_word(board, word)
+    
+    return jsonify({'result': response})
 
-# endpoint to handle AJAX request
-@app.route('/check-guess', methods=['POST'])
-def check_guess():
-    guess = request.form['guess']
-    result = boggle_game.check_valid_word(session['board'], guess)
-
-    if 'score' not in session:
-        session['score'] = 0
-
-    if result == 'ok':
-        session['score'] += len(guess)
-        session.modified = True
-
-    #print(session['score'])
-    return jsonify({'result': result, 'score': session['score']})
-
-@app.route('/reshuffle', methods=['POST'])
-def reshuffle():
-    session['board'] = boggle_game.make_board()
-    session['score'] = 0
-    print(session['score'])
-    return jsonify({'board': session['board']})
+@app.route('/post-score', methods=['POST'])
+def post_score():
+    "Update score, nplays, and high score"
+    score = request.json['score']
+    highscore = session.get('highscore', 0)
+    nplays = session.get('nplays', 0)
+    session['nplays'] = nplays + 1
+    session['highscore'] = max(score, highscore)
+    
+    return jsonify(brokeRecord=score > highscore)
+    

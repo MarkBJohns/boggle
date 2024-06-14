@@ -1,36 +1,52 @@
-{% extends 'base.html' %}
-
-{% block title %} Boggle {% endblock %}
-
-{% block content %}
-
-<h1 class="reverse"> Boggle </h1>
-
-<table>
-    {% for row in board %}
-    <tr>
-        {% for letter in row %}
-        <td> {{letter}} </td>
-        {% endfor %}
-    </tr>
-    {% endfor %}
-</table>
-
-<form action="">
-    <label for="guess">Guess:</label>
-    <input type="text" name="guess" id="guess">
-    <button>Submit</button>
-</form>
-
-<div id="words">
-    <label for="found">Found words</label>
-    <input type="text" id="found" readonly><br>
-    <label for="not-word">Not a word</label>
-    <input type="text" id="not-word" readonly><br>
-    <label for="not-on-board">Not on board</label>
-    <input type="text" id="not-on-board" readonly>
-</div>
-
-<p id="score">Score: {{score}} </p>
-
-{% endblock %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Boggle Assignment</title>
+</head>
+<body>
+    
+    <section id="boggle">
+        
+        <table class="board">
+            <tbody>
+                {% for row in board %}
+                <tr>
+                    {% for cell in row %}
+                    <td>{{cell}}</td>
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        
+        <p>High Score:
+            <b>{{highscore}}</b>
+            in {{nplays}} plays
+        </p>
+        
+        <p>
+            Score: <b class="score">0</b>
+            Time: <b class="timer"></b>
+        </p>
+        
+        <form action="/check-guess" method="post" class="add-word">
+            <input type="text" name="word" class="word" autofocus>
+            <button>Sumbit</button>
+        </form>
+        
+        <p class="message"></p>
+        
+        <ul class="words"></ul>
+        
+    </section>
+    
+    <script src="http://unpkg.com/jquery"></script>
+    <script src="https://unpkg.com/axios@0.19.0/dist/axios.js"></script>
+    <script src="/static/app.js"></script>
+    <!-- <script>
+      let game = new Game("boggle", 60);
+    </script> -->
+</body>
+</html>
